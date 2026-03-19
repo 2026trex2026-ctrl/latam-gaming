@@ -32,7 +32,7 @@ const GAMES = [
 const LIVEKIT_URL = 'wss://lg-j90di068.livekit.cloud'
 
 const getToken = async (room, username) => {
-  const res = await fetch('http://localhost:3001/token', {
+  const res = await fetch('https://latam-gaming-production-1d53.up.railway.app/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ room, username })
