@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import NavBar from '../components/layout/NavBar'
 import { LiveKitRoom, RoomAudioRenderer } from '@livekit/components-react'
 import '@livekit/components-styles'
+import { supabase } from '../supabase'
 
 const CHANNELS = [
   { id: 1, icon: '🌎', name: 'General LATAM', bg: '#0d2010', sub: 'Canal general para toda la comunidad', users: 12 },
@@ -195,6 +196,7 @@ function Dashboard() {
             { icon: ear ? '🎧' : '🔕', active: !ear, action: () => setEar(!ear), label: 'Audio' },
             { icon: '🖥', active: false, action: () => {}, label: 'Pantalla' },
             { icon: '⚙️', active: false, action: () => navigate('/settings'), label: 'Config' },
+            { icon: '🚪', active: false, action: async () => { await supabase.auth.signOut(); navigate('/login') }, label: 'Salir' },
           ].map((btn, i) => (
             <button key={i} onClick={btn.action} title={btn.label}
               className={`w-9 h-9 rounded-lg border flex items-center justify-center text-base transition-all hover:border-[#2a2a38] ${btn.active ? 'bg-[#2a1010] border-[#e0555530]' : 'bg-[#161620] border-[#1e1e28] hover:bg-[#1e1e2c]'}`}>
