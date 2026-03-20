@@ -4,11 +4,15 @@ const cors = require('cors')
 const { AccessToken } = require('livekit-server-sdk')
 
 const app = express()
-app.use(cors())
+
+app.use(cors({
+  origin: ['https://lg-lyart.vercel.app', 'http://localhost:5173', 'http://localhost:5174']
+}))
+
 app.use(express.json())
 
-const API_KEY = 'APIWmZZiojN5kxo'
-const API_SECRET = 'Wm9h2HvYKRTfONewIPWlcFRyWy4xfoNbWeu61gJKCdsB'
+const API_KEY = process.env.LIVEKIT_API_KEY
+const API_SECRET = process.env.LIVEKIT_API_SECRET
 
 app.post('/token', async (req, res) => {
   const { room, username } = req.body
@@ -40,3 +44,10 @@ const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`)
 })
+```
+
+Luego:
+```
+git add .
+git commit -m "fix cors and use env variables"
+git push
