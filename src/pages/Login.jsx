@@ -1,9 +1,44 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { supabase } from '../supabase'
 
 function Login() {
   const navigate = useNavigate()
   const [tab, setTab] = useState('login')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleLogin = async () => {
+    setLoading(true)
+    setError('')
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) {
+      setError(error.message)
+    } else {
+      navigate('/dashboard')
+    }
+    setLoading(false)
+  }
+
+  const handleRegister = async () => {
+    if (!username) { setError('Necesitás un nombre de usuario'); return }
+    setLoading(true)
+    setError('')
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { username } }
+    })
+    if (error) {
+      setError(error.message)
+    } else {
+      navigate('/dashboard')
+    }
+    setLoading(false)
+  }
 
   return (
     <div className="min-h-screen bg-[#111116] flex">
@@ -46,21 +81,22 @@ function Login() {
       {/* RIGHT - FORM */}
       <div className="w-96 flex flex-col justify-center px-10 flex-shrink-0">
 
-        {/* TABS */}
         <div className="flex bg-[#0c0c10] border border-[#1e1e28] rounded-xl p-1 mb-7">
-          <button
-            onClick={() => setTab('login')}
-            className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${tab === 'login' ? 'bg-[#1e1e2c] text-[#e8e8f0]' : 'text-[#44444e] hover:text-[#8888a0]'}`}
-          >
+          <button onClick={() => { setTab('login'); setError('') }}
+            className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${tab === 'login' ? 'bg-[#1e1e2c] text-[#e8e8f0]' : 'text-[#44444e] hover:text-[#8888a0]'}`}>
             Iniciar sesión
           </button>
-          <button
-            onClick={() => setTab('register')}
-            className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${tab === 'register' ? 'bg-[#1e1e2c] text-[#e8e8f0]' : 'text-[#44444e] hover:text-[#8888a0]'}`}
-          >
+          <button onClick={() => { setTab('register'); setError('') }}
+            className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${tab === 'register' ? 'bg-[#1e1e2c] text-[#e8e8f0]' : 'text-[#44444e] hover:text-[#8888a0]'}`}>
             Registrarse
           </button>
         </div>
+
+        {error && (
+          <div className="bg-[#2a1010] border border-[#e0555530] rounded-xl px-4 py-3 text-sm text-[#e05555] mb-4">
+            {error}
+          </div>
+        )}
 
         {tab === 'login' ? (
           <div>
@@ -68,27 +104,20 @@ function Login() {
             <div className="text-sm text-[#44444e] mb-6">Ingresá a tu cuenta para continuar</div>
 
             <div className="mb-4">
-              <label className="block text-[10px] font-bold text-[#55556a] tracking-widest uppercase mb-2">Correo o usuario</label>
-              <input type="text" placeholder="dragon_killer@gmail.com" className="w-full bg-[#0c0c10] border border-[#1e1e28] rounded-xl px-4 py-3 text-sm text-[#e8e8f0] placeholder-[#33333e] outline-none focus:border-[#1db95460] transition-colors" />
+              <label className="block text-[10px] font-bold text-[#55556a] tracking-widest uppercase mb-2">Correo electrónico</label>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="tu@correo.com"
+                className="w-full bg-[#0c0c10] border border-[#1e1e28] rounded-xl px-4 py-3 text-sm text-[#e8e8f0] placeholder-[#33333e] outline-none focus:border-[#1db95460] transition-colors" />
             </div>
             <div className="mb-2">
               <label className="block text-[10px] font-bold text-[#55556a] tracking-widest uppercase mb-2">Contraseña</label>
-              <input type="password" placeholder="••••••••" className="w-full bg-[#0c0c10] border border-[#1e1e28] rounded-xl px-4 py-3 text-sm text-[#e8e8f0] placeholder-[#33333e] outline-none focus:border-[#1db95460] transition-colors" />
+              <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••"
+                className="w-full bg-[#0c0c10] border border-[#1e1e28] rounded-xl px-4 py-3 text-sm text-[#e8e8f0] placeholder-[#33333e] outline-none focus:border-[#1db95460] transition-colors" />
             </div>
             <div className="text-xs text-[#1db954] text-right mb-6 cursor-pointer">¿Olvidaste tu contraseña?</div>
 
-            <button onClick={() => navigate('/dashboard')} className="w-full bg-[#1db954] text-black font-bold py-3 rounded-xl hover:bg-[#1ed760] transition-all hover:scale-[1.01] mb-5">
-              Entrar a LATAM Gaming
-            </button>
-
-            <div className="flex items-center gap-3 mb-5">
-              <div className="flex-1 h-px bg-[#1e1e28]"></div>
-              <span className="text-xs text-[#33333e]">o continuá con</span>
-              <div className="flex-1 h-px bg-[#1e1e28]"></div>
-            </div>
-
-            <button onClick={() => navigate('/dashboard')} className="w-full bg-[#0c0c10] border border-[#1e1e28] rounded-xl py-3 text-sm font-medium text-[#8888a0] hover:border-[#2a2a38] hover:text-[#e8e8f0] transition-all flex items-center justify-center gap-2 mb-5">
-              <span>G</span> Continuar con Google
+            <button onClick={handleLogin} disabled={loading}
+              className="w-full bg-[#1db954] text-black font-bold py-3 rounded-xl hover:bg-[#1ed760] transition-all hover:scale-[1.01] mb-5 disabled:opacity-50">
+              {loading ? 'Entrando...' : 'Entrar a LATAM Gaming'}
             </button>
 
             <div className="text-xs text-[#33333e] text-center">
@@ -102,23 +131,23 @@ function Login() {
 
             <div className="mb-4">
               <label className="block text-[10px] font-bold text-[#55556a] tracking-widest uppercase mb-2">Nombre de usuario</label>
-              <input type="text" placeholder="XxDragonKillerxX" className="w-full bg-[#0c0c10] border border-[#1e1e28] rounded-xl px-4 py-3 text-sm text-[#e8e8f0] placeholder-[#33333e] outline-none focus:border-[#1db95460] transition-colors" />
+              <input type="text" value={username} onChange={e => setUsername(e.target.value)} placeholder="XxDragonKillerxX"
+                className="w-full bg-[#0c0c10] border border-[#1e1e28] rounded-xl px-4 py-3 text-sm text-[#e8e8f0] placeholder-[#33333e] outline-none focus:border-[#1db95460] transition-colors" />
             </div>
             <div className="mb-4">
               <label className="block text-[10px] font-bold text-[#55556a] tracking-widest uppercase mb-2">Correo electrónico</label>
-              <input type="email" placeholder="tu@correo.com" className="w-full bg-[#0c0c10] border border-[#1e1e28] rounded-xl px-4 py-3 text-sm text-[#e8e8f0] placeholder-[#33333e] outline-none focus:border-[#1db95460] transition-colors" />
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="tu@correo.com"
+                className="w-full bg-[#0c0c10] border border-[#1e1e28] rounded-xl px-4 py-3 text-sm text-[#e8e8f0] placeholder-[#33333e] outline-none focus:border-[#1db95460] transition-colors" />
             </div>
             <div className="mb-5">
               <label className="block text-[10px] font-bold text-[#55556a] tracking-widest uppercase mb-2">Contraseña</label>
-              <input type="password" placeholder="Mínimo 8 caracteres" className="w-full bg-[#0c0c10] border border-[#1e1e28] rounded-xl px-4 py-3 text-sm text-[#e8e8f0] placeholder-[#33333e] outline-none focus:border-[#1db95460] transition-colors" />
+              <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Mínimo 6 caracteres"
+                className="w-full bg-[#0c0c10] border border-[#1e1e28] rounded-xl px-4 py-3 text-sm text-[#e8e8f0] placeholder-[#33333e] outline-none focus:border-[#1db95460] transition-colors" />
             </div>
 
-            <button onClick={() => navigate('/dashboard')} className="w-full bg-[#1db954] text-black font-bold py-3 rounded-xl hover:bg-[#1ed760] transition-all hover:scale-[1.01] mb-5">
-              Crear mi cuenta
-            </button>
-
-            <button onClick={() => navigate('/dashboard')} className="w-full bg-[#0c0c10] border border-[#1e1e28] rounded-xl py-3 text-sm font-medium text-[#8888a0] hover:border-[#2a2a38] hover:text-[#e8e8f0] transition-all flex items-center justify-center gap-2 mb-5">
-              <span>G</span> Continuar con Google
+            <button onClick={handleRegister} disabled={loading}
+              className="w-full bg-[#1db954] text-black font-bold py-3 rounded-xl hover:bg-[#1ed760] transition-all hover:scale-[1.01] mb-5 disabled:opacity-50">
+              {loading ? 'Creando cuenta...' : 'Crear mi cuenta'}
             </button>
 
             <div className="text-xs text-[#33333e] text-center">
