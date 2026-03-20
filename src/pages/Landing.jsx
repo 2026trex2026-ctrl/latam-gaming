@@ -30,7 +30,7 @@ function Landing() {
           <span className="text-lg font-black text-[#e8e8f0]">LATAM Gaming</span>
         </div>
         <div className="hidden md:flex items-center gap-8">
-          <span onClick={() => navigate('/explore')} className="text-sm font-medium text-[#55556a] hover:text-[#e8e8f0] cursor-pointer transition-colors">Canales</span>
+          <span onClick={() => navigate('/login')} className="text-sm font-medium text-[#55556a] hover:text-[#e8e8f0] cursor-pointer transition-colors">Canales</span>
           <span className="text-sm font-medium text-[#55556a] hover:text-[#e8e8f0] cursor-pointer transition-colors">Comunidad</span>
           <span className="text-sm font-medium text-[#55556a] hover:text-[#e8e8f0] cursor-pointer transition-colors">Descargar app</span>
         </div>
@@ -56,7 +56,7 @@ function Landing() {
           <button onClick={() => navigate('/login')} className="bg-[#1db954] text-black font-bold px-8 py-3 rounded-xl hover:bg-[#1ed760] transition-all hover:scale-105">
             Entrar gratis
           </button>
-          <button onClick={() => navigate('/explore')} className="border border-[#1e1e28] text-[#8888a0] font-bold px-8 py-3 rounded-xl hover:border-[#2a2a38] hover:text-[#e8e8f0] transition-all">
+          <button onClick={() => navigate('/login')} className="border border-[#1e1e28] text-[#8888a0] font-bold px-8 py-3 rounded-xl hover:border-[#2a2a38] hover:text-[#e8e8f0] transition-all">
             Ver canales →
           </button>
         </div>
