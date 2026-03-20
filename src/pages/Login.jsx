@@ -16,7 +16,8 @@ function Login() {
     setError('')
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) {
-      setError(error.message)
+      setError(JSON.stringify(error))
+console.log('Error completo:', error)
     } else {
       navigate('/dashboard')
     }
