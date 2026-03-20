@@ -44,10 +44,3 @@ const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`)
 })
-```
-
-Luego:
-```
-git add .
-git commit -m "fix cors and use env variables"
-git push
